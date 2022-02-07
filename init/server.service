@@ -1,0 +1,15 @@
+[Unit]
+Description=Server
+After=network.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/server/
+ExecStart=/opt/server/server
+Restart=always
+StartLimitInterval=5
+StartLimitBurst=500
+RestartSec=3
+
+[Install]
+WantedBy=multi-user.target

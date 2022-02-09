@@ -1,0 +1,194 @@
+//tested
+
+syntax = "proto3";
+
+option go_package = "pb/server.proto;server_proto";
+option java_multiple_files = true;
+option java_package = "io.grpc.api.server";
+option java_outer_classname = "ServerProto";
+
+package server;
+
+import "google/api/annotations.proto";
+import "protoc-gen-openapiv2/options/annotations.proto";
+
+// swagger-ui base info,
+option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_swagger) = {
+  schemes: HTTP;
+  schemes: HTTPS;
+  schemes: WSS;
+  consumes: "application/json";
+  security_definitions: {
+    security: {
+      key: "ApiKeyAuth"
+      value: {
+        type: TYPE_API_KEY
+        in: IN_HEADER
+        name: "Authorization"
+        description: "Authentication token, prefixed by Bearer: Bearer <token>"
+      }
+    }
+  }
+  security: {
+    security_requirement: {
+      key: "ApiKeyAuth"
+    }
+  }
+  info: {
+    title: "video server software";
+    version: "1.0";
+    contact: {
+      name: "Andrey";
+      url: "https://server.ru";
+      email: "info@server.ru";
+    };
+    license: {
+      name: "License";
+      url: "https://github.com/deepch/Server/blob/main/LICENSE.md";
+    };
+  };
+};
+
+
+service Greeter {
+
+  rpc InformationPlatformPing(Empty) returns(CodedReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Platform/Ping"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {}
+    };
+  }
+
+  rpc InformationPlatformVersion(Empty) returns(CodedReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Platform/Version"
+    };
+    option (grpc.gateway.protoc_gen_openapiv2.options.openapiv2_operation) = {
+      security: {}
+    };
+  }
+
+  rpc InformationDevicesSummary(Empty) returns(DevicesSummaryReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Devices/Summary"
+    };
+  }
+
+  rpc InformationDeviceStatus(DeviceUniqID) returns(MapBoolReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Device/{DeviceUniqID}/Status"
+    };
+  }
+
+  rpc InformationDeviceChannelStatus(DeviceUniqIDAbdChannelUniqID) returns(MapBoolReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Device/{DeviceUniqID}/Channel/{ChannelUniqID}/Status"
+    };
+  }
+
+  rpc InformationDeviceChannelStatistic(DeviceUniqIDAbdChannelUniqID) returns(MapBoolReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Device/{DeviceUniqID}/Channel/{ChannelUniqID}/Statistic"
+    };
+  }
+
+  rpc InformationDeviceStatistic(DeviceUniqID) returns(CodedReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Device/{DeviceUniqID}/Statistic"
+    };
+  }
+
+  rpc InformationDeviceSummary(DeviceUniqID) returns(ConfigurationsDeviceRequest) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Device/{DeviceUniqID}/Summary"
+    };
+  }
+
+  rpc InformationPlatformSummary(Empty) returns(CodedReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Information/Platform/Summary"
+    };
+  }
+
+  rpc ConfigurationsDeviceAddition(ConfigurationsDeviceRequest) returns(CodedReply) {
+    option(google.api.http) = {
+      post : "/GRPC/V6/Configurations/Device/{DeviceUniqID}/Addition"
+      body : "*"
+    };
+  }
+
+  rpc ConfigurationsDeviceEditing(ConfigurationsDeviceRequest) returns(CodedReply) {
+    option(google.api.http) = {
+      put : "/GRPC/V6/Configurations/Device/{DeviceUniqID}/Editing"
+      body : "*"
+    };
+  }
+
+  rpc ConfigurationsDeviceDeletion(DeviceUniqID) returns(CodedReply) {
+    option(google.api.http) = {
+      delete : "/GRPC/V6/Configurations/Device/{DeviceUniqID}/Deletion"
+    };
+  }
+
+  rpc ConfigurationsDeviceReconnection(DeviceUniqID) returns(CodedReply) {
+    option(google.api.http) = {
+      get : "/GRPC/V6/Configurations/Device/{DeviceUniqID}/Reconnection"
+    };
+  }
+
+}
+
+message DeviceChannel {
+  string Name = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Имя канала", description: "Имя устройства обычное текстовое поле.", required: ["uuid", "string"], example: "\"channel0\""}];
+  string DataURL = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Путь до источника видео / ауди данных потока", description: "Указывается в виде url ссылки например rtsp или http.", required: ["string", "url"], example: "\"rtsp://admin:admin@127.0.0.1/video1\""}];
+  string SnapshotURL = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Путь до источника картинок потока", description: "Указывается в виде url ссылки например rtsp или http.", required: ["string", "url"], example: "\"http://admin:admin@127.0.0.1/test.jpeg\""}];
+  bool VOD = 4 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение режима по требованию", description: "Включает / Отключает режим по требованию, такой поток автоматический выключается когда нет зрителей.", required: ["bool"], example: "\"true\""}];
+  bool Record = 5 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение записи архива потока", description: "Включает / Отключает запись архива потока.", required: ["bool"], example: "\"true\""}];
+  uint32 RecordTime =6 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Время записи в часах", description: "Время записи в часах.", required: ["uint32"], example: "\"24\""}];
+  bool Audio = 7 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение звуковой дорожки потока", description: "Включает / Отключает звуковой трек потока.", required: ["bool"], example: "\"true\""}];
+  bool RTPProxy = 8 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение rtsp прокси сервера", description: "Включает / Отключает прокси сервер для потока.", required: ["bool"], example: "\"true\""}];
+  bool Debug = 9 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение записи отладки потока в системный журнал", description: "Включает / Отключает запись подробного логирования сообщений потока.", required: ["bool"], example: "\"true\""}];
+  bool DebugRaw = 10 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Включение / Отключение записи отладки видео данных потока в .264 файл", description: "Включает / Отключает запись отладочного потока в формате .h264.", required: ["bool"], example: "\"true\""}];
+  uint32 Status = 11 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Активен / Отключен текущее состояние потока", description: "При добавлении данное поле не требуется.", required: ["uint32"], example: "\"0\""}];
+  float Bitrate = 12 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Битрейт потока", description: "При добавлении данное поле не требуется.", required: ["float"], example: "\"1024.00\""}];
+
+}
+
+message ConfigurationsDeviceRequest {
+  string DeviceUniqID = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Уникальный идентификатор устройства", description: "Уникальный идентификатор устройства, рекомендуется использовать uuid v2.", required: ["uuid", "string"], example: "\"123e4567-e89b-12d3-a456-426614174000\""}];
+  string ChannelsMode = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Режим работы канала", description: "Режим работы канала, в случаи указания onvif у ваших каналов будут автоматический заполняться DataURL и SnapshotURL.", required: ["rtsp", "onvif"], example: "\"rtsp\""}];
+  string Name = 3 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Имя Устройства", description: "Имя канала обычное текстовое поле.", required: ["uuid", "string"], example: "\"device0\""}];
+  string OnvifURL = 4 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Путь до onvif ссылка для доступа к мета данным потока", description: "Указывается в виде url ссылки например http. По умолчанию используется порт 80, в url можно указать логин и пароль в стандартом варианте.", required: ["string", "url"], example: "\"http://admin:admin@127.0.0.1\""}];
+  map<string, DeviceChannel> Channels = 5 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "string 0 1 2 3.... DeviceChannel struct", description: "only text"}];
+}
+
+message CodedReply {
+  string message = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Текстовое поле", description: "Ответ в формате string обычное текстовое поле", example: "\"success\""}];
+}
+
+message BoolReply {
+  bool Channel = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Значение bool поле", description: "Ответ в формате bool true / false", example: "\"true\""}];
+}
+
+message MapBoolReply {
+  map<string, uint32> Channels = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Массив значение uint32 поле", description: "Ответ в формате массив uint32 статусы",  example: "{\"0\": 1,\"1\": 0}"}];
+}
+
+message  DeviceUniqID {
+  string DeviceUniqID = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Уникальный идентификатор устройства", description: "Уникальный идентификатор устройства.", required: ["uuid", "string"], example: "\"123e4567-e89b-12d3-a456-426614174000\""}];
+}
+
+message  DeviceUniqIDAbdChannelUniqID {
+  string DeviceUniqID = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Уникальный идентификатор устройства", description: "Уникальный идентификатор устройства.", required: ["uuid", "string"], example: "\"123e4567-e89b-12d3-a456-426614174000\""}];
+  string ChannelUniqID = 2 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "Уникальный идентификатор канала", description: "Уникальный идентификатор канала.", required: ["uuid", "string"], example: "\"1\""}];
+}
+
+message Empty {
+
+}
+
+message DevicesSummaryReply {
+  map<string, ConfigurationsDeviceRequest> Encoders = 1 [(grpc.gateway.protoc_gen_openapiv2.options.openapiv2_field) = {title: "string array string.... Encoders struct", description: ""}];
+}

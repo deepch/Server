@@ -1,0 +1,45 @@
+Configurations:
+  Devices:
+    Encoders:
+      test2:
+        Channels:
+          "0":
+            DataURL: rtsp://example
+            Name: test1
+            RTPProxy: true
+            Record: true
+            RecordTime: 24
+            SnapshotURL: http://example
+        ChannelsMode: rtsp
+        Name: test2
+        OnvifURL: http://example
+  Modules:
+    API:
+      DemoMode: true
+      GRPC:
+        Enable: true
+        HTTPGateway: true
+        Port: :4431
+        Token: test
+      HTTP:
+        Enable: true
+        Port: :8081
+      HTTPS:
+        CertFile: cert.crt
+        KeyFile: key.key
+        Port: :443
+      Login: server
+      Password: server
+      WebSocket: {}
+    Cloud: {}
+    Configuration: {}
+    License: {}
+    Logging:
+      Enable: true
+      Format: nested
+      Level: trace
+      ReportCaller: true
+    Record:
+      Dir: ./record
+      Enable: true
+  Platform: {}

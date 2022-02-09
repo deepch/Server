@@ -12,7 +12,7 @@ import (
 	"google.golang.org/grpc/status"
 )
 
-//Базовые параметры record
+//Basic record parameters
 var (
 	SystemRecordDirectory = "record"
 	SystemByteDelimiter   = []byte{255, 0, 255, 0, 255, 0}
@@ -166,11 +166,11 @@ const (
 
 //cron settings section
 const (
-	ConstTaskDeleteFiles           = "0 10 * * * *" //Каждую 10 минуту каждого часа (раз в час)
-	ConstTaskGetImage              = "0 42 * * * *" //Каждую 42 минуту каждого часа (раз в час)
-	ConstTaskGetInstallationStatus = "0 30 * * * *" //Каждую 42 минуту каждого часа (раз в час)
-	ConstTaskSendStatus            = "0 * * * * *"  //Каждую 0 секунду (раз в минуту)
-	ConstSendPlatformStatistics    = "30 * * * * *" //Каждую 30 секунду (раз в минуту)
+	ConstTaskDeleteFiles           = "0 10 * * * *" //Every 10 minutes of every hour (once an hour)
+	ConstTaskGetImage              = "0 42 * * * *" //Every 42 minutes of every hour (once an hour)
+	ConstTaskGetInstallationStatus = "0 30 * * * *" //Every 30 minutes of every hour (once an hour)
+	ConstTaskSendStatus            = "0 * * * * *"  //Every 0 second (once per minute)
+	ConstSendPlatformStatistics    = "30 * * * * *" //Every 30 seconds (once per minute)
 )
 
 //http server section

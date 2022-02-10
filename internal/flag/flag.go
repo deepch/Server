@@ -39,7 +39,7 @@ type ServiceFlag struct {
 	Logger      *logrus.Logger
 }
 
-//New - the function is executed when the service is initialized
+//New - the function is executed when the service is initialized.
 func (service *ServiceFlag) New() error {
 
 	//Debug mode on/off
